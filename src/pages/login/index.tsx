@@ -14,12 +14,12 @@ const tailLayout = {
 
 const Login = () => {
   const [form] = Form.useForm();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const onFinish = (values: userPassLoginForm) => {
     userPassLogin(values).then((res) => {
       if (res.success) {
         localStorage.setItem('token', res.data.token);
-        // navigate('/');
+        navigate('/');
       } else {
         message.error(res.errorMessage);
       }
