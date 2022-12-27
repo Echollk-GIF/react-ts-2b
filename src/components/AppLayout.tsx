@@ -38,12 +38,33 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
     navigate(info.key);
   }
 
+  function checkToken() {
+    const token = localStorage.getItem('token');
+    if (!token && location.pathname !== '/login') {
+      navigate('/login');
+    }
+  }
   useEffect(() => {
+    checkToken();
+    window.logout = () => {
+      localStorage.clear();
+      navigate('/login');
+    };
+    // const token = localStorage.getItem('token');
+    // if (token) {
+    // dispatch(getCurrentInfo());
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    checkToken();
     const routerList = matchRoutes(router, location.pathname);
     // 更新了state 视图会重新渲染
     if (routerList) {
       setdefaultSelectedKeys(routerList.map((r) => r.pathname));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   if (defaultSelectedKeys.length === 0) {

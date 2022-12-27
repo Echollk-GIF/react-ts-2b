@@ -19,7 +19,7 @@ request.interceptors.response.use(
   },
   (err) => {
     if (err.response.status === 401) {
-      // window.logout();
+      window.logout();
     }
     message.error(err.message);
     return Promise.reject(err);
