@@ -1,15 +1,14 @@
 import React, { ReactNode, useState, useEffect } from 'react';
+import { Breadcrumb, Button, Layout, Menu, theme, Spin, Alert, Row, Col } from 'antd';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { Breadcrumb, Layout, Menu, theme, Spin, Alert } from 'antd';
 import { matchRoutes, Outlet } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { getCurrentUserInfo } from '../store/userReducer';
-
 import router from '../router';
-const { Header, Content, Footer, Sider } = Layout;
 
+const { Header, Content, Footer, Sider } = Layout;
 const AppLayout = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,9 +19,13 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
   );
   const dispatch: AppDispatch = useDispatch();
   function getMenuList(routers: any) {
+    let permissionSet = new Set(permissionList.map((p) => p.uniqueKey));
     let t = [];
     for (let r of routers) {
       if (r.hide) {
+        continue;
+      }
+      if (!permissionSet.has(r.path)) {
         continue;
       }
       let tmp = {
@@ -74,6 +77,13 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  function logout() {
+    localStorage.clear();
+    // dispatch(doLogout());
+    navigate('/login');
+  }
+
   if (loading) {
     return (
       <Spin tip="Loading...">
@@ -99,7 +109,20 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
         />
       </Sider>
       <Layout className="site-layout">
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Row>
+            <Col span={20}></Col>
+            <Col span={4}>
+              <Button
+                onClick={() => {
+                  logout();
+                }}
+              >
+                {userInfo.username + '，点击退出登录'}
+              </Button>
+            </Col>
+          </Row>
+        </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>

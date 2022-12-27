@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Space, Button } from 'antd';
 import { getUserList } from '../../../api/userManage';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
+import Auth from '../../../components/Auth';
 import DeleteUser from './components/DeleteUser';
 import EditUser from './components/EditUser';
 import AddUser from './components/AddUser';
@@ -97,14 +98,16 @@ const UserManage = () => {
 
   return (
     <>
-      <Button
-        type="primary"
-        onClick={() => {
-          setIsShowAddModal(true);
-        }}
-      >
-        新增
-      </Button>
+      <Auth permission="addUser">
+        <Button
+          type="primary"
+          onClick={() => {
+            setIsShowAddModal(true);
+          }}
+        >
+          新增
+        </Button>
+      </Auth>
       <Table
         dataSource={userList}
         onChange={change}

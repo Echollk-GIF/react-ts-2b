@@ -22,13 +22,7 @@ function DeleteUser({ id, onDelete }: Props) {
   }
   return (
     <>
-      <Popconfirm
-        title="删除用户"
-        onCancel={cancel}
-        onConfirm={deleteUser}
-        okText="确定"
-        cancelText="取消"
-      >
+      <Popconfirm title="删除用户" onCancel={cancel} onConfirm={deleteUser}>
         <Button type="primary" danger>
           删除
         </Button>

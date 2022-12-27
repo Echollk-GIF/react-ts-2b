@@ -6,12 +6,19 @@ import store from './store';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
+import { ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+// import enUS from 'antd/locale/en_US';
+import zhCN from 'antd/locale/zh_CN';
+dayjs.locale('en');
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <ConfigProvider locale={zhCN}>
+        <App />
+      </ConfigProvider>
     </Provider>
   </BrowserRouter>,
 );
