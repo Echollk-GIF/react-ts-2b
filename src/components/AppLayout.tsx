@@ -1,8 +1,12 @@
 import React, { ReactNode, useState, useEffect } from 'react';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Spin, Alert } from 'antd';
 import { matchRoutes, Outlet } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store';
+import { getCurrentUserInfo } from '../store/userReducer';
+
 import router from '../router';
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -11,6 +15,10 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [defaultSelectedKeys, setdefaultSelectedKeys] = useState<string[]>([]);
+  const { loading, userInfo, permissionList } = useSelector(
+    (state: RootState) => state.userReducer,
+  );
+  const dispatch: AppDispatch = useDispatch();
   function getMenuList(routers: any) {
     let t = [];
     for (let r of routers) {
@@ -50,10 +58,10 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
       localStorage.clear();
       navigate('/login');
     };
-    // const token = localStorage.getItem('token');
-    // if (token) {
-    // dispatch(getCurrentInfo());
-    // }
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(getCurrentUserInfo());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,7 +74,13 @@ const AppLayout = ({ children }: { children?: ReactNode }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
-
+  if (loading) {
+    return (
+      <Spin tip="Loading...">
+        <Alert message="react-ts-2b" description="By clshen" type="info" />
+      </Spin>
+    );
+  }
   if (defaultSelectedKeys.length === 0) {
     return null;
   }
